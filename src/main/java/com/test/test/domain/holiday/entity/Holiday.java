@@ -3,6 +3,8 @@ package com.test.test.domain.holiday.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -16,7 +18,7 @@ public class Holiday {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String date;
+    private LocalDate date;
     private String localName;
     private String name;
     private String countryCode;
