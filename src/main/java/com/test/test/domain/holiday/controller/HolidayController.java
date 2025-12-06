@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/holidays")
@@ -24,6 +26,11 @@ public class HolidayController {
     @GetMapping("/search")
     public Page<Holiday> search(HolidaySearchRequestDto req) {
         return holidayService.search(req);
+    }
+
+    @PostMapping("/refresh")
+    public List<Holiday> refresh(@RequestParam String countryCode, @RequestParam int year) {
+        return holidayService.refresh(countryCode, year);
     }
 
     @DeleteMapping("/{year}/{countryCode}")

@@ -55,6 +55,32 @@ public class HolidayService {
     }
 
     @Transactional
+    public List<Holiday> refresh(String countryCode, int year) {
+
+        List<NagerHolidayDto> dtos = nagerClient.fetchHolidays(countryCode, year);
+
+        LocalDate start = LocalDate.of(year, 1, 1);
+        LocalDate end = LocalDate.of(year, 12, 31);
+        holidayRepository.deleteByCountryCodeAndDateBetween(countryCode, start, end);
+
+        List<Holiday> holidays = dtos.stream()
+                .map(dto -> Holiday.builder()
+                        .date(LocalDate.parse(dto.getDate()))
+                        .localName(dto.getLocalName())
+                        .name(dto.getName())
+                        .countryCode(dto.getCountryCode())
+                        .fixed(dto.isFixed())
+                        .global(dto.isGlobal())
+                        .countries(null)
+                        .launchYear(null)
+                        .types(String.join(",", dto.getTypes()))
+                        .build())
+                .toList();
+
+        return holidayRepository.saveAll(holidays);
+    }
+
+    @Transactional
     public void delete(String year, String countryCode) {
 
         int y = Integer.parseInt(year);
