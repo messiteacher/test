@@ -1,11 +1,11 @@
 package com.test.test.domain.holiday.controller;
 
+import com.test.test.domain.holiday.dto.HolidaySearchRequestDto;
 import com.test.test.domain.holiday.entity.Holiday;
 import com.test.test.domain.holiday.service.HolidayService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,9 +21,9 @@ public class HolidayController {
         return "로딩 완료!";
     }
 
-    @GetMapping
-    public List<Holiday> search(@RequestParam String countryCode, @RequestParam String from, @RequestParam String to) {
-        return holidayService.search(countryCode, from, to);
+    @GetMapping("/search")
+    public Page<Holiday> search(HolidaySearchRequestDto req) {
+        return holidayService.search(req);
     }
 
     @DeleteMapping("/{year}/{countryCode}")

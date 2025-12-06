@@ -2,11 +2,16 @@ package com.test.test.domain.holiday.service;
 
 import com.test.test.domain.country.entity.Country;
 import com.test.test.domain.country.service.CountryService;
+import com.test.test.domain.holiday.dto.HolidaySearchRequestDto;
 import com.test.test.domain.holiday.entity.Holiday;
 import com.test.test.domain.holiday.repository.HolidayRepository;
+import com.test.test.domain.holiday.spec.HolidaySpecification;
 import com.test.test.global.dto.NagerHolidayDto;
 import com.test.test.global.util.NagerClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,11 +48,10 @@ public class HolidayService {
         holidayRepository.saveAll(holidays);
     }
 
-    public List<Holiday> search(String countryCode, String from, String to) {
+    public Page<Holiday> search(HolidaySearchRequestDto req) {
 
-        LocalDate start = LocalDate.parse(from);
-        LocalDate end = LocalDate.parse(to);
-        return holidayRepository.findByCountryCodeAndDateBetween(countryCode, start, end);
+        Pageable pageable = PageRequest.of(req.getPage(), req.getSize());
+        return holidayRepository.findAll(HolidaySpecification.search(req), pageable);
     }
 
     @Transactional
