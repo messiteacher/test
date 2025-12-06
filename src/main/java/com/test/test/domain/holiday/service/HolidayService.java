@@ -55,12 +55,13 @@ public class HolidayService {
     }
 
     @Transactional
-    public List<Holiday> refresh(String countryCode, int year) {
+    public List<Holiday> refresh(String countryCode, Integer year) {
 
         List<NagerHolidayDto> dtos = nagerClient.fetchHolidays(countryCode, year);
 
         LocalDate start = LocalDate.of(year, 1, 1);
         LocalDate end = LocalDate.of(year, 12, 31);
+
         holidayRepository.deleteByCountryCodeAndDateBetween(countryCode, start, end);
 
         List<Holiday> holidays = dtos.stream()
